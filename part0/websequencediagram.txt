@@ -1,0 +1,26 @@
+title AJAX vs SPA
+
+# https://www.websequencediagrams.com/
+
+participant server
+participant client
+
+note over server, client: === AJAX method ===
+note over client: write something into text field\nclick submit
+
+client -> server: POST /new_note
+note left of server: update notes
+server -> client: 302 redirect
+client -> server: GET /notes
+note left of server: resend all note data
+server -> client: 200 OK
+note right of client: show updated notes
+
+note over server, client: === SPA method ===
+
+note over client: write something into text field\nclick submit
+note right of client: JS intercepts
+note right of client: JS updates notes in client
+client -> server: POST /new_SPA_note
+server -> client: 201 updated
+note left of server: update notes
