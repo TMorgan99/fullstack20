@@ -32,7 +32,7 @@ const PersonForm = (props) => {
           .then(newRecord => {
             const newPersons = persons.map( item => item.id === found.id ? newRecord : item )
             setPersons(newPersons)
-            })b
+            })
           .then( ()=> showErrorMessage(`Note: '${personObject.name}' has a new number`) )
           .catch( error => {
             console.log(error)
