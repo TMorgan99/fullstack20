@@ -2,37 +2,48 @@ import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import './App.css'
 
+const api_key = process.env.REACT_APP_API_KEY
+
+const WEATHERSTACK_URL = 'http://api.weatherstack.com/current'
+
+// API key avaiable on weatherstack.com site, just log in to the dashboard.
 const CurrentWeather = ({location}) => {
-  const WEATHERSTACK_URL = 'http://api.weatherstack.com/current'
 
   const [currentWeather, setCurrentWeather] = useState(undefined)
 
   useEffect( ()=> {
     const params = {
-      access_key: process.env.REACT_APP__WEATHERSTACK_ACCESS_KEY,
+      access_key: api_key,
       query: location
     }
-    console.log(`query params: ${params}`)
+    console.log( 'get: ', params)
+
     axios
       .get(WEATHERSTACK_URL, {params})
       .then(response => {
+          console.log(response.data)
           setCurrentWeather(response.data.current)
         })
-      .catch(error => `CurrentWeather: ${console.log(error)}`)
+      .catch(error => console.log('CurrentWeather: error', error))
     },[location])
 
-  return ( (currentWeather === undefined)
-  ? <p> loading weather please wait ... </p>
-  : <>
-      <h3> Currently in {location} </h3>
-      <p>
-        temperature: {currentWeather.temperature} <br />
-        precip: {currentWeather.precip} <br />
-        wind: {currentWeather.wind_speed} {currentWeather.wind_dir} <br />
-        {currentWeather.weather_descriptions[0]} <br />
-        <img alt="weather icon" src={currentWeather.weather_icons[0]} />
-      </p>
-    </>
+  // cannot return inside the useEffect!
+  if (api_key === undefined) {
+    return <div> No weather info is available at this time </div>
+  }
+
+  return ((currentWeather === undefined)
+    ? <p> loading weather please wait ... </p>
+    : <>
+        <h3> Currently in {location} </h3>
+        <p>
+          temperature: {currentWeather.temperature} <br />
+          precip: {currentWeather.precip} <br />
+          wind: {currentWeather.wind_speed} {currentWeather.wind_dir} <br />
+          {currentWeather.weather_descriptions[0]} <br />
+          <img alt="weather icon" src={currentWeather.weather_icons[0]} />
+        </p>
+      </>
   )
 }
  
